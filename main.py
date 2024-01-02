@@ -31,9 +31,6 @@ def main():
     
         st.write(f"Total score: {total_score}/{len(st.session_state.questions)}")
 
-        if st.button("Play again"):
-            st.session_state.questions = generate_math_questions(number_of_questions=2)
-
 
 if __name__ == "__main__":
     main()
