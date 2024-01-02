@@ -1,5 +1,8 @@
 from marvin import ai_fn
+import openai
 
+openai.api_base = "https://demo.deployradiant.com/anjor-test/openai"
+openai.api_key = "notNeeded"
 
 @ai_fn
 def generate_math_questions(number_of_questions: int = 1) -> list[str]:
