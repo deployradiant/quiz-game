@@ -23,7 +23,7 @@ def check_math_answer(question: str, answer: str) -> str:
 
 def main():
     st.title("Math Quiz Game")
-    st.header("Solve the math questions below")
+    st.header("Solve the math questions below.")
     if 'questions' not in st.session_state:
         st.session_state.questions = generate_math_questions(number_of_questions=3)
 
