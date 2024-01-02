@@ -11,7 +11,9 @@ def generate_math_questions(number_of_questions: int = 1) -> list[str]:
 
 
 @ai_fn
-def check_math_answer(question: str, answer: str) -> str:
-    """Check the answer to a math question. The question should be a string in the format of "X + Y = ?" or "X - Y = ?".
-    The answer should be a string with the correct answer. 
-    Respond in json format with 1 key: "answer". "answer" should be the correct answer. Do not add anything else in your response. """
+def generate_math_answers(questions: list[str]) -> dict[str, str]:
+    """Check the answers to math questions. The input should be a list with the questions
+    The question should be a string in the format of "X + Y = ?" or "X - Y = ?".
+
+    Respond as a dictionary with the question as the key and the correct answer as the value. 
+    """
