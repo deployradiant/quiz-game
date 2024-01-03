@@ -1,6 +1,6 @@
 from marvin import ai_fn
 import openai
-from quiz import Quiz
+from quiz.quiz import Quiz
 
 openai.api_base = "https://demo.deployradiant.com/anjor-test/openai"
 openai.api_key = "notNeeded"

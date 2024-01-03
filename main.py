@@ -1,13 +1,17 @@
 import streamlit as st
-from constants import QuizType
-from utils import get_quiz
+from quiz.constants import QuizType
+from quiz.utils import get_quiz
 
 
-def main():
+def title():
     st.title("Simple Quiz")
     st.write("Click the button below to start the game.")
     st.write("You will be asked 3 questions. You can answer them one by one and then check the answers.")
     st.write("If you want to play again, click the button again.")
+
+
+def main():
+    title()
 
     st.sidebar.title("Categories")
     category = st.sidebar.selectbox("Select a category", [category.value for category in QuizType])

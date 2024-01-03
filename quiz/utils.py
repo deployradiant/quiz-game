@@ -1,5 +1,5 @@
-from constants import QuizType
-from math_quiz import MathQuiz
+from quiz.constants import QuizType
+from quiz.elementary_math import MathQuiz
 
 
 def get_quiz(quiz_type):
