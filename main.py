@@ -10,12 +10,17 @@ def title():
     st.write("If you want to play again, click the button again.")
 
 
-def main():
-    title()
-
+def get_category_from_sidebar():
     st.sidebar.title("Categories")
     category = st.sidebar.selectbox("Select a category", [category.value for category in QuizType])
 
+    return category
+
+
+def main():
+    title()
+
+    category = get_category_from_sidebar()
     quiz = get_quiz(category)
 
 
@@ -35,19 +40,19 @@ def main():
     total_score = 0
     if st.button("Check answers"):
 
-        correct_answers = quiz.generate_answers(st.session_state.questions)
+        results = quiz.check_answers(questions_with_answers)
 
         for question in st.session_state.questions:
-            if question in questions_with_answers:
+            if question in results:
+                user_answer = questions_with_answers[question]
+                is_correct = results[question]["is_correct"]
+                correct_answer = results[question]["correct_answer"]
 
-                answer = questions_with_answers[question]
-                correct_answer = correct_answers[question]
-
-                if answer == correct_answer:
+                if is_correct == "true":
                     total_score += 1
-                    st.markdown(f":white_check_mark: {question} \n You answered: {answer}")
+                    st.markdown(f":white_check_mark: {question} \n You answered: {user_answer}. \n Correct answer: {correct_answer}")
                 else:
-                    st.markdown(f":x: {question} \n You answered: {answer} \n Correct answer: {correct_answer}")
+                    st.markdown(f":x: {question} \n You answered: {user_answer}. \n Correct answer: {correct_answer}")
     
         st.write(f"Total score: {total_score}/{len(st.session_state.questions)}")
 

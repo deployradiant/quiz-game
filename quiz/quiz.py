@@ -8,5 +8,5 @@ class Quiz(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def generate_answers(self, questions: List[str]) -> Dict[str, str]:
+    def check_answers(self, questions_with_answers: List[str]) -> Dict[str, str]:
         pass
