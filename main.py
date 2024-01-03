@@ -1,60 +1,47 @@
 import streamlit as st
-from quiz.constants import QuizType
-from quiz.utils import get_quiz
+
+from quiz import generate_questions, check_answers
+from utils import _check_answers
 
 
 def title():
     st.title("Simple Quiz")
-    st.write("Click the button below to start the game.")
-    st.write("You will be asked 3 questions. You can answer them one by one and then check the answers.")
-    st.write("If you want to play again, click the button again.")
+    st.sidebar.header("Instructions")
+
+    st.sidebar.markdown("This is a simple quiz game. You can select the category and the number of questions for the quiz.")
+    st.sidebar.write('Click the "Start game" button to start the quiz.')
+    st.sidebar.write("If you want to play again, click the button again.")
 
 
-def get_category_from_sidebar():
-    st.sidebar.title("Categories")
-    category = st.sidebar.selectbox("Select a category", [category.value for category in QuizType])
+def quiz_params():
+    cols = st.columns(2)
 
-    return category
+    with cols[0]:
+        category = st.text_input("**Category**", key="category")
+    with cols[1]:
+        number_of_questions = st.text_input("**Number of questions**", key="number_of_questions")
 
-
-def main():
-    title()
-
-    category = get_category_from_sidebar()
-    quiz = get_quiz(category)
+    return category, number_of_questions
 
 
-    if "questions" not in st.session_state: 
+def run_quiz(category: str, number_of_questions: int):
+    if "questions" not in st.session_state:
         st.session_state.questions = []
 
     if st.button("Start game"):
-        st.session_state.questions = quiz.generate_questions(number_of_questions=3)
+        st.session_state.questions = generate_questions(category=category, number_of_questions=number_of_questions)
 
     questions_with_answers = {}
-
-    i = 1
     for question in st.session_state.questions:
         st.write(question)
         questions_with_answers[question] = st.text_input("Answer", key=question)
-    
-    total_score = 0
-    if st.button("Check answers"):
 
-        results = quiz.check_answers(questions_with_answers)
+    if st.session_state.questions:
+        if st.button("Check answers"):
+            _check_answers(check_answers_fn=check_answers, questions_with_answers=questions_with_answers)
 
-        for question in st.session_state.questions:
-            if question in results:
-                user_answer = questions_with_answers[question]
-                is_correct = results[question]["is_correct"]
-                correct_answer = results[question]["correct_answer"]
-
-                if is_correct == "true":
-                    total_score += 1
-                    st.markdown(f":white_check_mark: {question} \n You answered: {user_answer}. \n Correct answer: {correct_answer}")
-                else:
-                    st.markdown(f":x: {question} \n You answered: {user_answer}. \n Correct answer: {correct_answer}")
-    
-        st.write(f"Total score: {total_score}/{len(st.session_state.questions)}")
 
 if __name__ == "__main__":
-    main()
+    title()
+    category, number_of_questions = quiz_params()
+    run_quiz(category=category, number_of_questions=number_of_questions)
