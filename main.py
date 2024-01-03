@@ -1,9 +1,9 @@
-import marvin
 import streamlit as st
 
 from quiz import generate_questions, check_answers
 from utils import _check_answers
 
+MODELS = ["gpt-3.5-turbo", "mistral-tiny", "mistral-small"]
 
 def title():
     st.title("Simple Quiz")
@@ -25,13 +25,15 @@ def quiz_params():
     return category, number_of_questions
 
 
-def run_quiz(category: str, number_of_questions: int):
+def run_quiz(model:str, category: str, number_of_questions: int):
     if "questions" not in st.session_state:
         st.session_state.questions = []
 
     if st.button("Start game"):
-        print(f"Using model to generate questions: {marvin.settings.llm_model}")
-        st.session_state.questions = generate_questions(category=category, number_of_questions=number_of_questions)
+        questions = generate_questions(model=model, category=category, number_of_questions=number_of_questions)
+        if not questions:
+            st.write("The model returns invalid JSON. Please try again with a different model.")
+        st.session_state.questions = questions
 
     questions_with_answers = {}
     for question in st.session_state.questions:
@@ -40,25 +42,24 @@ def run_quiz(category: str, number_of_questions: int):
 
     if st.session_state.questions:
         if st.button("Check answers"):
-            print(f"Using model to check answers: {marvin.settings.llm_model}")
-            _check_answers(check_answers_fn=check_answers, questions_with_answers=questions_with_answers)
+            results = check_answers(model=model, questions_with_answers=questions_with_answers)
+            if not results:
+                st.write("The model returns invalid JSON. Please try again with a different model.")
+            _check_answers(results=results, questions_with_answers=questions_with_answers)
 
 
 if __name__ == "__main__":
     title()
 
     if "model" not in st.session_state:
-        st.session_state.model = "openai/gpt-3.5-turbo"
+        st.session_state.model = "gpt-3.5-turbo"
 
     st.sidebar.header("Advanced settings")
-    model = st.sidebar.radio("Model", ["gpt-3.5-turbo", "mistral-tiny"])
+    model = st.sidebar.radio("Model", MODELS)
 
     if model != st.session_state.model:
         st.session_state.model = model
-        marvin.settings.llm_model = f"openai/{st.session_state.model}"
-
-        print(marvin.settings.llm_model)
 
     category, number_of_questions = quiz_params()
 
-    run_quiz(category=category, number_of_questions=number_of_questions)
+    run_quiz(model=st.session_state.model, category=category, number_of_questions=number_of_questions)
