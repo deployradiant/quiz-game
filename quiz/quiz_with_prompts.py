@@ -40,7 +40,9 @@ def generate_questions_with_prompts(
         },
     ]
 
-    response = client.chat.completions.create(messages=messages, model=model, n=1, temperature=1.8)
+    response = client.chat.completions.create(
+        messages=messages, model=model, n=1, temperature=1.8
+    )
     content = response.choices[0].message.content
     try:
         return json.loads(content)

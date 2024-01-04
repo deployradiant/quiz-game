@@ -14,7 +14,7 @@ MODELS = [
     "claude-instant-1",
     "mistral-tiny",
     "mistral-small",
-    "ollama-wrapper-zephyr"
+    "ollama-wrapper-zephyr",
 ]
 
 
@@ -42,9 +42,10 @@ def quiz_params():
         number_of_questions = int(number_of_questions) if number_of_questions else 0
 
     if number_of_questions > 10:
-        st.write("Number of questions should be less than 10. Reload the page to play again.")
+        st.write(
+            "Number of questions should be less than 10. Reload the page to play again."
+        )
         st.stop()
-
 
     return category, number_of_questions
 
@@ -120,12 +121,23 @@ if __name__ == "__main__":
     if "model" not in st.session_state:
         st.session_state.model = MODELS[0]
     st.sidebar.header("Model Selection")
+    st.sidebar.write("Select a model from the dropdown below.")
     st.session_state.model = st.sidebar.selectbox(
         "Select a model", MODELS, index=MODELS.index(st.session_state.model)
     )
 
-    category, number_of_questions = quiz_params()
+    st.sidebar.header("About")
+    st.sidebar.write(
+        "This app was created by the team at [Radiant](https://radiantai.com)."
+    )
+    st.sidebar.write(
+        "If you have any questions, please contact us at anjor@radiantai.com"
+    )
+    st.sidebar.write(
+        "The source code is available at https://github.com/anjor/quiz-game"
+    )
 
+    category, number_of_questions = quiz_params()
 
     run_quiz(
         client=openai_client,
