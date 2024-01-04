@@ -1,6 +1,6 @@
 import streamlit as st
 
-from quiz import generate_questions, check_answers
+from quiz import generate_questions_with_marvin, check_answers_with_marvin
 from utils import _check_answers
 
 
@@ -29,7 +29,7 @@ def run_quiz(category: str, number_of_questions: int):
         st.session_state.questions = []
 
     if st.button("Start game"):
-        st.session_state.questions = generate_questions(category=category, number_of_questions=number_of_questions)
+        st.session_state.questions = generate_questions_with_marvin(category=category, number_of_questions=number_of_questions)
 
     questions_with_answers = {}
     for question in st.session_state.questions:
@@ -38,7 +38,8 @@ def run_quiz(category: str, number_of_questions: int):
 
     if st.session_state.questions:
         if st.button("Check answers"):
-            _check_answers(check_answers_fn=check_answers, questions_with_answers=questions_with_answers)
+            results = check_answers_with_marvin(questions_with_answers=questions_with_answers)
+            _check_answers(results=results, questions_with_answers=questions_with_answers)
 
 
 if __name__ == "__main__":
