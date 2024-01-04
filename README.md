@@ -1,7 +1,7 @@
 # Quiz Game
 
 ## Overview
-Quiz Game is a simple and interactive quiz application built with [Marvin](https://github.com/PrefectHQ/marvin) and [Streamlit](https://streamlit.io/) leveraging the [Radiant platform](https://radiantai.com). 
+Quiz Game is a simple and interactive quiz application built with [Instructor](https://jxnl.github.io/instructor/) and [Streamlit](https://streamlit.io/) leveraging the [Radiant platform](https://radiantai.com). 
 
 The application generates quiz questions for the user to solve using AI functions in Marvin. After the user submits their answers, the application checks the answers and provides immediate feedback, along with the correct answers for any questions the user got wrong.
 
@@ -24,3 +24,8 @@ The application generates quiz questions for the user to solve using AI function
 ## Future Enhancements
 - Add a timer to each question.
 - Add a leaderboard to track high scores.
+
+## Marvin support
+
+This application was originally built with Marvin 1.5.6. It was then moved to using Instructor in this [pull request](https://github.com/anjor/quiz-game/pull/3) in order to use the latest version of OpenAI python client.
+There is tentative support for Marvin in this [pull request](https://github.com/anjor/quiz-game/pull/5), however, that requires pinning the openai python client to a `0.x` version.
