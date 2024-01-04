@@ -8,7 +8,14 @@ from quiz.quiz_with_prompts import (
     check_answer_with_prompts,
 )
 
-MODELS = ["gpt-3.5-turbo", "claude-instant-1", "mistral-small", "ollama-wrapper-zephyr"]
+MODELS = [
+    "gpt-3.5-turbo",
+    "claude-2.1",
+    "claude-instant-1",
+    "mistral-tiny",
+    "mistral-small",
+    "ollama-wrapper-zephyr"
+]
 
 
 def title():
@@ -98,7 +105,7 @@ def run_quiz(
 
 if __name__ == "__main__":
     openai_client = OpenAI(
-        api_key="notNeeded", base_url="http://localhost:8001/anjor-1/openai"
+        api_key="notNeeded", base_url="https://demo.deployradiant.com/anjor-test/openai"
     )
 
     title()
