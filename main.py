@@ -3,7 +3,7 @@ from typing import Callable
 import streamlit as st
 from openai import OpenAI
 
-from quiz_with_prompts import generate_questions_with_prompts, check_answer_with_prompts
+from quiz.quiz_with_prompts import generate_questions_with_prompts, check_answer_with_prompts
 
 
 def title():
