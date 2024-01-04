@@ -1,15 +1,7 @@
 import instructor
 from openai import OpenAI
-from pydantic import BaseModel
 
-
-class Questions(BaseModel):
-    questions: list[str]
-
-
-class Answer(BaseModel):
-    is_correct: bool
-    correct_answer: str
+from data_types import Questions, Answer
 
 
 def generate_questions_with_instructor(
@@ -42,7 +34,7 @@ def generate_questions_with_instructor(
         messages=messages, model=model, n=1, response_model=Questions
     )
 
-    return response
+    return response.questions
 
 
 def check_answer_with_instructor(client: OpenAI, model: str, question: str, user_answer: str) -> Answer:
