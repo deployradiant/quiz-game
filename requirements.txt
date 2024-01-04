@@ -1,5 +1,4 @@
 instructor~=0.4.5
-marvin~=1.5.6
 openai~=1.6.1
 streamlit~=1.29.0
 
