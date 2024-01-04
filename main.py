@@ -134,7 +134,7 @@ if __name__ == "__main__":
         "If you have any questions, please contact us at anjor@radiantai.com"
     )
     st.sidebar.write(
-        "The source code is available at https://github.com/anjor/quiz-game"
+        "The source code is available on [GitHub](https://github.com/anjor/quiz-game)."
     )
 
     category, number_of_questions = quiz_params()
