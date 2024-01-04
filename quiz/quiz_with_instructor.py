@@ -37,7 +37,9 @@ def generate_questions_with_instructor(
     return response.questions
 
 
-def check_answer_with_instructor(client: OpenAI, model: str, question: str, user_answer: str) -> Answer:
+def check_answer_with_instructor(
+    client: OpenAI, model: str, question: str, user_answer: str
+) -> Answer:
     messages = [
         {
             "role": "system",

@@ -8,9 +8,10 @@ openai.api_key = "notNeeded"
 
 
 @ai_fn
-def generate_questions_with_marvin(category: str, number_of_questions: int) -> Questions:
+def generate_questions_with_marvin(
+    category: str, number_of_questions: int
+) -> Questions:
     """Generate questions for a given category and number of questions.
-    The complexity of the questions should be appropriate for primary school children, as they will be the primary quiz takers.
 
     For example,
     If the category is "math", the questions should be simple math questions.
