@@ -29,7 +29,7 @@ def title():
     st.sidebar.write("If you want to play again, click the button again.")
 
 
-def quiz_params():
+def quiz_params(max_questions=5):
     cols = st.columns(2)
 
     with cols[0]:
@@ -41,9 +41,9 @@ def quiz_params():
 
         number_of_questions = int(number_of_questions) if number_of_questions else 0
 
-    if number_of_questions > 10:
+    if number_of_questions > max_questions:
         st.write(
-            "Number of questions should be less than 10. Reload the page to play again."
+            f"Number of questions should be less than {max_questions}. Reload the page to play again."
         )
         st.stop()
 
@@ -137,7 +137,7 @@ if __name__ == "__main__":
         "The source code is available on [GitHub](https://github.com/anjor/quiz-game)."
     )
 
-    category, number_of_questions = quiz_params()
+    category, number_of_questions = quiz_params(max_questions=5)
 
     run_quiz(
         client=openai_client,
