@@ -1,3 +1,5 @@
+from typing import Callable
+
 import streamlit as st
 from openai import OpenAI
 
@@ -28,11 +30,11 @@ def quiz_params():
     return category, number_of_questions
 
 
-def check_answers(client: OpenAI, model: str, questions_with_answers: dict[str, str]):
+def check_answers(check_answer_fn: Callable, client: OpenAI, model: str, questions_with_answers: dict[str, str]):
     total_score = 0
     for question in st.session_state.questions:
         user_answer = questions_with_answers[question]
-        result = check_answer_with_instructor(
+        result = check_answer_fn(
             client=client, model=model, question=question, user_answer=user_answer
         )
         is_correct = result.is_correct
@@ -50,12 +52,12 @@ def check_answers(client: OpenAI, model: str, questions_with_answers: dict[str, 
     st.write(f"Total score: {total_score}/{len(st.session_state.questions)}")
 
 
-def run_quiz(client: OpenAI, model: str, category: str, number_of_questions: int):
+def run_quiz(client: OpenAI, model: str, generate_questions_fn: Callable, check_answer_fn: Callable, category: str, number_of_questions: int):
     if "questions" not in st.session_state:
         st.session_state.questions = []
 
     if st.button("Start game"):
-        st.session_state.questions = generate_questions_with_instructor(
+        st.session_state.questions = generate_questions_fn(
             client=client,
             model=model,
             category=category,
@@ -70,6 +72,7 @@ def run_quiz(client: OpenAI, model: str, category: str, number_of_questions: int
     if st.session_state.questions:
         if st.button("Check answers"):
             check_answers(
+                check_answer_fn=check_answer_fn,
                 client=client,
                 model=model,
                 questions_with_answers=questions_with_answers,
@@ -86,6 +89,8 @@ if __name__ == "__main__":
     run_quiz(
         client=openai_client,
         model="gpt-3.5-turbo",
+        generate_questions_fn=generate_questions_with_instructor,
+        check_answer_fn=check_answer_with_instructor,
         category=category,
         number_of_questions=number_of_questions,
     )
