@@ -3,7 +3,7 @@ from typing import Callable
 import streamlit as st
 from openai import OpenAI
 
-from quiz_with_instructor import generate_questions_with_instructor, check_answer_with_instructor
+from quiz_with_prompts import generate_questions_with_prompts, check_answer_with_prompts
 
 
 def title():
@@ -89,8 +89,8 @@ if __name__ == "__main__":
     run_quiz(
         client=openai_client,
         model="gpt-3.5-turbo",
-        generate_questions_fn=generate_questions_with_instructor,
-        check_answer_fn=check_answer_with_instructor,
+        generate_questions_fn=generate_questions_with_prompts,
+        check_answer_fn=check_answer_with_prompts,
         category=category,
         number_of_questions=number_of_questions,
     )
