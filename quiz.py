@@ -1,31 +1,78 @@
-import openai
-from marvin import ai_fn
-
-openai.api_base = "https://demo.deployradiant.com/anjor-test/openai"
-openai.api_key = "notNeeded"
+import instructor
+from openai import OpenAI
+from pydantic import BaseModel
 
 
-@ai_fn
-def generate_questions_with_marvin(category: str, number_of_questions: int) -> list[str]:
-    """Generate questions for a given category and number of questions.
-    The complexity of the questions should be appropriate for primary school children, as they will be the primary quiz takers.
-
-    For example,
-    If the category is "math", the questions should be simple math questions.
-
-    If you generate good questions, you will be rewarded with a bonus of $500.
-    """
+class Question(BaseModel):
+    question: str
 
 
-@ai_fn
-def check_answers_with_marvin(questions_with_answers: dict[str, str]) -> dict[str, dict]:
-    """
-    Check the answers to questions. The input should be a dictionary with the questions along with the answers, where the key is the question and the value is the answer.
-    The question should be a string.
-    The answer should be a string.
+class Questions(BaseModel):
+    questions: list[Question]
 
-    Respond as a dictionary with the question as the key and a dictionary with two keys: "is_correct" and
-    "correct_answer". "is_correct" should be a boolean with either True or False. "correct_answer" should be a
-    string with the correct answer.
-    """
 
+class Answer(BaseModel):
+    is_correct: bool
+    correct_answer: str
+
+
+def generate_questions(
+    client: OpenAI, model: str, category: str, number_of_questions: int
+) -> list[str]:
+    messages = [
+        {
+            "role": "system",
+            "content": """Your job is to generate one single likely output for a Python function with the following 
+                        signature and docstring:
+
+                       def generate_questions(category: str, number_of_questions: int) -> list[str]:
+                            \"\"\"Generate questions for a given category and number of questions.\"\"\"
+
+                        The user will provide function inputs (if any).
+                        """,
+        },
+        {
+            "role": "user",
+            "content": f"""The function was called with the following inputs:
+                         - category: {category}
+                         - number_of_questions: {number_of_questions}
+
+                        What is its output?""",
+        },
+    ]
+
+    client = instructor.patch(client)
+    response = client.chat.completions.create(
+        messages=messages, model=model, n=1, response_model=Questions
+    )
+    return [q.question for q in response.questions]
+
+
+def check_answer(client: OpenAI, model: str, question: str, user_answer: str) -> Answer:
+    messages = [
+        {
+            "role": "system",
+            "content": """Check the answer to the question. Both the question and answer should be strings.
+            
+            Allow for minor differences in the answer. This includes differences such as whitespace, capitalization, and punctuation.
+            It also includes differences in the way the answer is expressed.
+            
+            For example if the correct answer to a math question is "x = 5", then "x=5", "X = 5", "x = 5." and "5" should all be considered correct.
+            
+            """,
+        },
+        {
+            "role": "user",
+            "content": f"""The function was called with the following inputs:
+                         - {question}
+                         - {user_answer}
+
+                        What is the output?""",
+        },
+    ]
+
+    client = instructor.patch(client)
+    response = client.chat.completions.create(
+        messages=messages, model=model, n=1, response_model=Answer
+    )
+    return response
