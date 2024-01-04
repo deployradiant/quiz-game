@@ -39,6 +39,13 @@ def quiz_params():
             "**Number of questions**", key="number_of_questions"
         )
 
+        number_of_questions = int(number_of_questions) if number_of_questions else 0
+
+    if number_of_questions > 10:
+        st.write("Number of questions should be less than 10. Reload the page to play again.")
+        st.stop()
+
+
     return category, number_of_questions
 
 
@@ -109,7 +116,6 @@ if __name__ == "__main__":
     )
 
     title()
-    category, number_of_questions = quiz_params()
 
     if "model" not in st.session_state:
         st.session_state.model = MODELS[0]
@@ -117,6 +123,9 @@ if __name__ == "__main__":
     st.session_state.model = st.sidebar.selectbox(
         "Select a model", MODELS, index=MODELS.index(st.session_state.model)
     )
+
+    category, number_of_questions = quiz_params()
+
 
     run_quiz(
         client=openai_client,
