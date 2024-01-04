@@ -3,12 +3,8 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 
-class Question(BaseModel):
-    question: str
-
-
 class Questions(BaseModel):
-    questions: list[Question]
+    questions: list[str]
 
 
 class Answer(BaseModel):
@@ -16,7 +12,7 @@ class Answer(BaseModel):
     correct_answer: str
 
 
-def generate_questions(
+def generate_questions_with_instructor(
     client: OpenAI, model: str, category: str, number_of_questions: int
 ) -> list[str]:
     messages = [
@@ -45,10 +41,11 @@ def generate_questions(
     response = client.chat.completions.create(
         messages=messages, model=model, n=1, response_model=Questions
     )
-    return [q.question for q in response.questions]
+
+    return response
 
 
-def check_answer(client: OpenAI, model: str, question: str, user_answer: str) -> Answer:
+def check_answer_with_instructor(client: OpenAI, model: str, question: str, user_answer: str) -> Answer:
     messages = [
         {
             "role": "system",
@@ -75,4 +72,5 @@ def check_answer(client: OpenAI, model: str, question: str, user_answer: str) ->
     response = client.chat.completions.create(
         messages=messages, model=model, n=1, response_model=Answer
     )
+
     return response
