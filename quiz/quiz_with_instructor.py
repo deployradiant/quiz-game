@@ -31,7 +31,7 @@ def generate_questions_with_instructor(
 
     client = instructor.patch(client)
     response = client.chat.completions.create(
-        messages=messages, model=model, n=1, response_model=Questions, temperature=1.8
+        messages=messages, model=model, n=1, response_model=Questions, temperature=1.0
     )
 
     return response.questions
